@@ -7,6 +7,11 @@ router.post('/', async (req, res) => {
   return res.json({text: 'create game'});
 });
 
+// get game info
+router.get('/:id', async (req, res) => {
+  return res.json({text: `get game info: ${req.params.id}`});
+});
+
 // starting game
 router.post('/:id/start', async (req, res) => {
   return res.json({text: `start game: ${req.params.id}`});
