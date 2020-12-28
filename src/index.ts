@@ -1,12 +1,15 @@
 import express from 'express';
 import cors from 'cors';
-import * as bodyParser from 'body-parser';
+import { json } from 'body-parser';
 import router from './router';
+import { initializeDb } from './lib/db';
+
+initializeDb();
 
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(json());
 app.use(router);
 
 const port = process.env.PORT || 8000;
