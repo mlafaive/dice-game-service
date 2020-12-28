@@ -1,6 +1,6 @@
-# Rolling America Service
+# Dice Game Service
 
-Service for Rolling America the game.
+Service for the dice game!
 
 ## Development
 
@@ -12,8 +12,8 @@ Service for Rolling America the game.
 
 ### Setup
 
-1. Clone repository: `git clone https://github.com/mlafaive/rolling-america-service.git`
-2. Enter local code: `cd rolling-america-service`
+1. Clone repository: `git clone https://github.com/mlafaive/dice-game-service.git`
+2. Enter local code: `cd dice-game-service`
 3. Install dependencies: `yarn`
 4. Run development server: `yarn start:dev`
 
