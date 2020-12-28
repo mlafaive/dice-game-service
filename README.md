@@ -15,7 +15,8 @@ Service for the dice game!
 1. Clone repository: `git clone https://github.com/mlafaive/dice-game-service.git`
 2. Enter local code: `cd dice-game-service`
 3. Install dependencies: `yarn`
-4. Run development server: `yarn start:dev`
+4. Add mongo environment variable export in `.zshrc`: `export DICE_GAME_MONGO_URI=<uri>`
+5. Run development server: `yarn start:dev`
 
 To test if your setup worked correctly go to [http://localhost:8080](http://localhost:8000/healthcheck) in your browser and you should see `{"status": "ok"}`.
 
