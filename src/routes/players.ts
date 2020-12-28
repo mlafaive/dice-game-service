@@ -7,8 +7,8 @@ router.post('/', async (req, res) => {
   return res.json({text: 'create player'});
 });
 
-// update player score
-router.patch('/:id', async (req, res) => {
+// update player map
+router.patch('/:id/map', async (req, res) => {
   return res.json({text: `update player: ${req.params.id}`});
 });
 
