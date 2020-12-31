@@ -1,15 +1,17 @@
 import express from 'express';
+import { createPlayer } from '../lib/services/players';
 
 const router = express.Router();
  
 // create new player in game
-router.post('/', async (req, res) => {
-  return res.json({text: 'create player'});
-});
-
-// get player info
-router.get('/:id', async (req, res) => {
-  return res.json({text: `get player: ${req.params.id}`});
+router.post('/', async (req, res, next) => {
+  const { gameId, playerName } = req.body;
+  try {
+    const game = await createPlayer(gameId, playerName);
+    return res.json(game);
+  } catch (error) {
+    return next(error);
+  }
 });
 
 // update player map
