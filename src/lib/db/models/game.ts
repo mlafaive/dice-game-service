@@ -1,4 +1,4 @@
-import mongoose, { Schema, SchemaDefinition, Document } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 import dieSchema, { Die, defaultDice } from './dice';
 import playerSchema, { Player } from './player';
 

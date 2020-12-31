@@ -1,9 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
+import { ErrorRequestHandler } from 'express';
 import HttpError, { InternalServerError } from '../lib/errors/http-errors';
  
-export default function errorMiddleware(error: any, req: Request, res: Response, next: NextFunction) {
+const errorMiddleware: ErrorRequestHandler = function (error, req, res, _next) {
   if (!(error instanceof HttpError)) {
     error = new InternalServerError(error.message ?? 'Unknown error');
   }
-  return res.status(error.status).send({ message: error.message });
+  res.status(error.status).send({ message: error.message });
 }
+
+export default errorMiddleware;
