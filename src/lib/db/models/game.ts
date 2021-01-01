@@ -1,9 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import dieSchema, { Die, defaultDice } from './dice';
 import playerSchema, { Player } from './player';
-
-export const NumberOfRounds = 8;
-export const RollsPerRound = 3;
+import { RollsPerRound } from './constants';
 
 export enum GameStatus {
   New = 'new',

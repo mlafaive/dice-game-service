@@ -1,7 +1,5 @@
 import { Schema } from 'mongoose';
 
-export const MaxDieValue = 6;
-
 export enum DieColor {
   Blue = 'blue',
   Red = 'red',
@@ -48,6 +46,6 @@ const dieSchema = new Schema({
     required: true,
     default: 1,
   },
-}, { _id: false });
+});
 
 export default dieSchema;

@@ -1,7 +1,8 @@
 import GameModel, { Game, GameStatus } from '../db/models/game';
-import { Die, DieStatus, MaxDieValue } from '../db/models/dice';
+import { Die, DieStatus } from '../db/models/dice';
 import { NotFoundError, BadRequestError, AuthorizationError } from '../errors/http-errors';
 import { getRandomInt } from './utils';
+import { MaxDieValue } from '../db/models/constants';
 
 export async function createGame(gameName: string, playerName: string): Promise<Game> {
   const newGame = new GameModel({ name: gameName, players: [{ name: playerName }] });

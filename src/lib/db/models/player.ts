@@ -1,6 +1,5 @@
 import { Schema, Document } from 'mongoose';
-
-export const DefaultRemainingPowers = 3;
+import { RollsPerRound, PowersPerGame } from './constants';
 
 export interface PlayerMapNode {
   id: string;
@@ -22,14 +21,16 @@ export interface Player extends Document {
   colorChangesRemaining: number;
   guardsRemaining: number;
   nodes: PlayerMapNode[];
+  movesRemaining: number;
 }
  
 const playerSchema = new Schema({
   name: { type: String, required: true },
   nodes: { type: [PlayerNodeSchema], required: true },
-  dupesRemaining: { type: Number, required: true, default: DefaultRemainingPowers},
-  colorChangesRemaining: { type: Number, required: true, default: DefaultRemainingPowers},
-  guardsRemaining: { type: Number, required: true, default: DefaultRemainingPowers}
+  dupesRemaining: { type: Number, required: true, default: PowersPerGame},
+  colorChangesRemaining: { type: Number, required: true, default: PowersPerGame},
+  guardsRemaining: { type: Number, required: true, default: PowersPerGame},
+  movesRemaining: { type: Number, required: true, default: RollsPerRound}
 });
 
 export default playerSchema;

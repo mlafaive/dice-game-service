@@ -13,4 +13,15 @@ export async function createPlayer(gameId: string, playerName: string): Promise<
   return game.save();
 }
 
-// export async function updatePlayerMap(id: string, ): Promise<Player> {}
+// export async function updatePlayerMap(
+//   gameId: string, playerId: string, mapUpdates: MapUpdate[]
+// ): Promise<Game> {
+//   const game = await getGame(gameId);
+//   const player = game.players.find((player) => player.id === playerId);
+
+//   // logic for figuring out if the move is valid
+//   // if move is valid, update player map 
+//   // if not throw `BadRequestError`
+
+//   return game.save();
+// }
