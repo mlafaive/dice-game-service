@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 
 export enum DieColor {
   Blue = 'blue',
@@ -16,7 +16,7 @@ export enum DieStatus {
   Unused = 'unused'
 }
 
-export interface Die {
+export interface Die extends Document {
   color: DieColor;
   status: DieStatus;
   value: number;

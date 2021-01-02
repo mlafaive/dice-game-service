@@ -62,7 +62,15 @@ export async function rollDice(id: string, playerId: string): Promise<Game> {
   game.dice[secondDieIndex].status = DieStatus.Active;
   game.dice[secondDieIndex].value = getRandomInt(1, MaxDieValue);
 
-  game.status = GameStatus.Scoring;
+  game.status = GameStatus.Moving;
 
   return game.save();
+}
+
+export function getDie(dieId: string, game: Game) : Die {
+  const die = game.dice.find((die) => die.id === dieId);
+  if (!die){
+    throw new NotFoundError(`unable to find die with id "${dieId}"`)
+  }
+  return die;
 }

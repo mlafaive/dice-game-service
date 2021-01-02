@@ -6,7 +6,7 @@ import { RollsPerRound } from './constants';
 export enum GameStatus {
   New = 'new',
   Rolling = 'rolling',
-  Scoring = 'scoring',
+  Moving = 'moving',
   Complete = 'complete'
 }
 

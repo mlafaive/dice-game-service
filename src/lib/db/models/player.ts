@@ -20,13 +20,13 @@ export interface Player extends Document {
   dupesRemaining: number;
   colorChangesRemaining: number;
   guardsRemaining: number;
-  nodes: PlayerMapNode[];
+  playerMapNodes: PlayerMapNode[];
   movesRemaining: number;
 }
  
 const playerSchema = new Schema({
   name: { type: String, required: true },
-  nodes: { type: [PlayerNodeSchema], required: true },
+  playerMapNodes: { type: [PlayerNodeSchema], required: true },
   dupesRemaining: { type: Number, required: true, default: PowersPerGame},
   colorChangesRemaining: { type: Number, required: true, default: PowersPerGame},
   guardsRemaining: { type: Number, required: true, default: PowersPerGame},
