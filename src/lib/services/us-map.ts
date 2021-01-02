@@ -20,7 +20,7 @@ function areValuesOneAway(value1: number, value2: number): boolean {
   return Math.abs(value1 - value2) <= 1;
 }
 
-export function isValidValue(nodeId: USMapNodeId, value: number, player: Player): boolean {
+export function isValidMapValue(nodeId: USMapNodeId, value: number, player: Player): boolean {
   const playerMap = player.playerMapNodes.reduce((map, node) => {
     map[node.id] = node;
     return map;
@@ -37,7 +37,7 @@ export function isValidValue(nodeId: USMapNodeId, value: number, player: Player)
   });
 }
 
-export function hasValidMove(color: DieColor, value: number, player: Player): boolean {
+export function hasValidMapMove(color: DieColor, value: number, player: Player): boolean {
   const nodeIdsForColor = getMapNodeIdsByColor(color);
-  return nodeIdsForColor.some((id) => isValidValue(id, value, player));
+  return nodeIdsForColor.some((id) => isValidMapValue(id, value, player));
 }
