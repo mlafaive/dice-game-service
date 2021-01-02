@@ -1,14 +1,5 @@
 import { Schema, Document } from 'mongoose';
-
-export enum DieColor {
-  Blue = 'blue',
-  Red = 'red',
-  Purple = 'purple',
-  Yellow = 'yellow',
-  Green = 'green',
-  Orange = 'orange',
-  Wild = 'wild'
-}
+import { DieColor } from './constants';
 
 export enum DieStatus {
   Used = 'used',
