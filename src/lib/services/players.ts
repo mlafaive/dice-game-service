@@ -48,11 +48,9 @@ export async function updatePlayerMap(
   const usedDice = new Set<string>();
 
   playerMoves.forEach((move) => {
-
     validateMove(move, player, game, usedDice);
     usedDice.add(move.dieId);
     player.playerMapNodes.push(...convertMoveToNode(move, game));
-
   });
 
   return game.save();
@@ -105,18 +103,17 @@ function validateMove(move: PlayerMove, player: Player, game: Game, usedDice: Se
   };
 
   validateMove(dupeMove, player, game, usedDice);
-
 }
 
 //validate that the die color matches the node and/or the user color changed it
-function validateMoveColor(die: Die, moveMapNode: MapNode, move: PlayerMove): void{
+function validateMoveColor(die: Die, moveMapNode: MapNode, move: PlayerMove): void {
   if (die.color !== moveMapNode.color && !move.isColorChanged && die.color !== DieColor.Wild){
     throw new BadRequestError(`die color ${die.color} does not match 
       selected node color ${moveMapNode.color}`);
   }
 }
 
-function validatePlayerPowers(move: PlayerMove, player: Player): void{
+function validatePlayerPowers(move: PlayerMove, player: Player): void {
   if(move.isColorChanged && player.colorChangesRemaining === 0){
     throw new BadRequestError('player cannot use another color change');
   }
@@ -130,15 +127,14 @@ function validatePlayerPowers(move: PlayerMove, player: Player): void{
 
 //returns array of nodes since the move could be a dupe move
 //prereq: the move is valid
-function convertMoveToNode(move: PlayerMove, game: Game): PlayerMapNode[]{
-  const nodeArray = [];
+function convertMoveToNode(move: PlayerMove, game: Game): PlayerMapNode[] {
   const die = getDie(move.dieId, game);
-  nodeArray.push({
+  const nodeArray = [{
     id: move.mapNodeId,
     value: die.value,
     isGuarded: move.isGuarded,
     isXed: move.isXed,
-  });
+  }];
 
   if(move.isDuped){
     //push the node for the dupe move

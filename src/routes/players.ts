@@ -16,7 +16,6 @@ router.post('/', async (req, res, next) => {
 
 // update player map
 router.patch('/:id/map', async (req, res, next) => {
-  
   const { gameId, playerId, playerMoves } = req.body;
   try {
     const game = await updatePlayerMap(gameId, playerId, playerMoves);
@@ -24,8 +23,6 @@ router.patch('/:id/map', async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-
-  //return res.json({text: `update player: ${req.params.id}`});
 });
 
 export default router;
