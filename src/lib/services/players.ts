@@ -2,7 +2,7 @@ import { Game, GameStatus } from '../db/models/game';
 import { Player, PlayerMapNode } from '../db/models/player';
 import { getGame, getDie } from './games';
 import { NotFoundError, BadRequestError } from '../errors/http-errors'
-import { MovesPerTurn, DieColor, USMapNodeId } from '../db/models/constants';
+import { MovesPerTurn, DieColor, USMapNodeId, RoundsPerGame } from '../db/models/constants';
 import { Die, DieStatus } from '../db/models/dice';
 import { MapNode } from '../db/models/us-map';
 import { getMapNodeById, isValidMapValue, hasValidMapMove } from './us-map';
@@ -35,7 +35,7 @@ export function getPlayer(game: Game, playerId: string): Player {
   return player;
 }
 
-export async function updatePlayerMap(
+export async function makePlayerMove(
   gameId: string, playerId: string, playerMoves: PlayerMove[]
 ): Promise<Game> {
   const game = await getGame(gameId);
@@ -47,14 +47,63 @@ export async function updatePlayerMap(
 
   const usedDice = new Set<string>();
 
+  //validate the player's moves and update the player
   playerMoves.forEach((move) => {
     validateMove(move, player, game, usedDice);
     usedDice.add(move.dieId);
     player.playerMapNodes.push(...convertMoveToNode(move, game));
-  });
 
+    //update player's remaining powers if they used one on this move
+    if (move.isGuarded) player.guardsRemaining--;
+    if (move.isColorChanged) player.colorChangesRemaining--;
+    if (move.isDuped) player.dupesRemaining--;
+  });
+  player.hasCompletedMove = true;
+
+  //if all players have not made their move yet, don't change the game state
+  if (!game.players.every((player) => player.hasCompletedMove)) {
+    return game.save();
+  }
+
+  //at this point we know all players are done moving
+  /*
+    name: string;
+    dice: Die[];
+    status: GameStatus;
+    round: number;
+    rollsRemainingInRound: number;
+    currentRoller: number;
+    players: Player[];
+  */
+
+  game.players.forEach((player) => {  //reset each player's move boolean
+    player.hasCompletedMove = false;
+  });
+  game.status = GameStatus.Rolling;  //update game status to rolling
+
+  //if there are rolls left in the round, move to the next roll
+  if (game.rollsRemainingInRound > 0){
+    game.dice.forEach((die) => {  //mark active dice as used
+      if (die.status === DieStatus.Active) die.status = DieStatus.Used;
+    });
+    return game.save();
+  }
+
+  //at this point we know there are 0 rolls left in the current round
+  //if this is the last round, end the game
+  if (game.round === RoundsPerGame){
+    game.status = GameStatus.Complete;
+    return game.save();
+  }
+
+  //if we get here, it means we need to move to the next round
+  game.dice.forEach((die) => {  //reset dice as unused for the new round
+    die.status = DieStatus.Unused;
+  });
+  game.round++;
   return game.save();
 }
+
 
 function validateMove(move: PlayerMove, player: Player, game: Game, usedDice: Set<string>): void{
   
@@ -114,13 +163,13 @@ function validateMoveColor(die: Die, moveMapNode: MapNode, move: PlayerMove): vo
 }
 
 function validatePlayerPowers(move: PlayerMove, player: Player): void {
-  if(move.isColorChanged && player.colorChangesRemaining === 0){
+  if(move.isColorChanged && player.colorChangesRemaining <= 0){
     throw new BadRequestError('player cannot use another color change');
   }
-  if(move.isGuarded && player.guardsRemaining === 0){
+  if(move.isGuarded && player.guardsRemaining <= 0){
     throw new BadRequestError('player cannot use another guard');
   }
-  if(move.isDuped && player.dupesRemaining === 0){
+  if(move.isDuped && player.dupesRemaining <= 0){
     throw new BadRequestError('player cannot use another dupe');
   }
 }

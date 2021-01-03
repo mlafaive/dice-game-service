@@ -21,7 +21,7 @@ export interface Player extends Document {
   colorChangesRemaining: number;
   guardsRemaining: number;
   playerMapNodes: PlayerMapNode[];
-  movesRemaining: number;
+  hasCompletedMove: boolean;
 }
  
 const playerSchema = new Schema({
@@ -30,7 +30,7 @@ const playerSchema = new Schema({
   dupesRemaining: { type: Number, required: true, default: PowersPerGame},
   colorChangesRemaining: { type: Number, required: true, default: PowersPerGame},
   guardsRemaining: { type: Number, required: true, default: PowersPerGame},
-  movesRemaining: { type: Number, required: true, default: RollsPerRound}
+  hasCompletedMove: { type: Boolean, required: true, default: false}
 });
 
 export default playerSchema;

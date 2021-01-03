@@ -15,7 +15,7 @@ export interface Game extends Document {
   dice: Die[];
   status: GameStatus;
   round: number;
-  rollsRemaining: number;
+  rollsRemainingInRound: number;
   currentRoller: number;
   players: Player[];
 }
@@ -25,7 +25,7 @@ const gameSchema = new Schema({
   dice: { type: [dieSchema], required: true, default: defaultDice },
   status: { type: String, required: true, enum: Object.values(GameStatus), default: GameStatus.New },
   round: { type: Number, required: true, default: 1 },
-  rollsRemaining: { type: Number, required: true, default: RollsPerRound },
+  rollsRemainingInRound: { type: Number, required: true, default: RollsPerRound },
   currentRoller: { type: Number, required: true, default: 0 },
   players: { type: [playerSchema], required: true }
 });

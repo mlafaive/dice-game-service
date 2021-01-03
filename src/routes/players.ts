@@ -1,5 +1,5 @@
 import express from 'express';
-import { createPlayer, updatePlayerMap } from '../lib/services/players';
+import { createPlayer, makePlayerMove } from '../lib/services/players';
 
 const router = express.Router();
  
@@ -18,7 +18,7 @@ router.post('/', async (req, res, next) => {
 router.patch('/:id/map', async (req, res, next) => {
   const { gameId, playerId, playerMoves } = req.body;
   try {
-    const game = await updatePlayerMap(gameId, playerId, playerMoves);
+    const game = await makePlayerMove(gameId, playerId, playerMoves);
     return res.json(game);
   } catch (error) {
     return next(error);
