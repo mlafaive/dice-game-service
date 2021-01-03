@@ -62,6 +62,9 @@ export async function rollDice(id: string, playerId: string): Promise<Game> {
   game.dice[secondDieIndex].status = DieStatus.Active;
   game.dice[secondDieIndex].value = getRandomInt(1, MaxDieValue);
 
+  game.rollsRemaining--;
+  game.currentRoller = (game.currentRoller + 1) % game.players.length;
+
   game.status = GameStatus.Moving;
 
   return game.save();
