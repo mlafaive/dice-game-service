@@ -14,9 +14,10 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// update player map
-router.patch('/:id/map', async (req, res, next) => {
-  const { gameId, playerId, playerMoves } = req.body;
+// make player move
+router.patch('/:id/move', async (req, res, next) => {
+  const { id: playerId } = req.params;
+  const { gameId, playerMoves } = req.body;
   try {
     const game = await makePlayerMove(gameId, playerId, playerMoves);
     return res.json(game);

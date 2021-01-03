@@ -2,7 +2,7 @@ import { Game, GameStatus } from '../db/models/game';
 import { Player, PlayerMapNode } from '../db/models/player';
 import { getGame, getDie } from './games';
 import { NotFoundError, BadRequestError } from '../errors/http-errors'
-import { MovesPerTurn, DieColor, USMapNodeId, RoundsPerGame } from '../db/models/constants';
+import { MovesPerTurn, DieColor, USMapNodeId, RoundsPerGame, RollsPerRound } from '../db/models/constants';
 import { Die, DieStatus } from '../db/models/dice';
 import { MapNode } from '../db/models/us-map';
 import { getMapNodeById, isValidMapValue, hasValidMapMove } from './us-map';
@@ -35,14 +35,17 @@ export function getPlayer(game: Game, playerId: string): Player {
   return player;
 }
 
+// TODO: handle when move cannot be made for color
+// TODO: check that player hasn't already gone this turn
+// TODO: validate that if isDuped is true that a dupedMoveNodeId is passed
 export async function makePlayerMove(
   gameId: string, playerId: string, playerMoves: PlayerMove[]
 ): Promise<Game> {
   const game = await getGame(gameId);
   const player = getPlayer(game, playerId);
 
-  if (playerMoves.length != MovesPerTurn){
-    throw new BadRequestError(`player cannot make more than "${MovesPerTurn}" moves per turn`);
+  if (playerMoves.length !== MovesPerTurn){
+    throw new BadRequestError(`player must make than "${MovesPerTurn}" moves per turn`);
   }
 
   const usedDice = new Set<string>();
@@ -64,17 +67,6 @@ export async function makePlayerMove(
   if (!game.players.every((player) => player.hasCompletedMove)) {
     return game.save();
   }
-
-  //at this point we know all players are done moving
-  /*
-    name: string;
-    dice: Die[];
-    status: GameStatus;
-    round: number;
-    rollsRemainingInRound: number;
-    currentRoller: number;
-    players: Player[];
-  */
 
   game.players.forEach((player) => {  //reset each player's move boolean
     player.hasCompletedMove = false;
@@ -100,6 +92,7 @@ export async function makePlayerMove(
   game.dice.forEach((die) => {  //reset dice as unused for the new round
     die.status = DieStatus.Unused;
   });
+  game.rollsRemainingInRound = RollsPerRound;
   game.round++;
   return game.save();
 }
@@ -157,8 +150,7 @@ function validateMove(move: PlayerMove, player: Player, game: Game, usedDice: Se
 //validate that the die color matches the node and/or the user color changed it
 function validateMoveColor(die: Die, moveMapNode: MapNode, move: PlayerMove): void {
   if (die.color !== moveMapNode.color && !move.isColorChanged && die.color !== DieColor.Wild){
-    throw new BadRequestError(`die color ${die.color} does not match 
-      selected node color ${moveMapNode.color}`);
+    throw new BadRequestError(`die color ${die.color} does not match selected node color ${moveMapNode.color}`);
   }
 }
 

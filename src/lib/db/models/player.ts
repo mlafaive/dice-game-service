@@ -1,5 +1,5 @@
 import { Schema, Document } from 'mongoose';
-import { RollsPerRound, PowersPerGame, USMapNodeId } from './constants';
+import { PowersPerGame, USMapNodeId } from './constants';
 
 export interface PlayerMapNode {
   id: USMapNodeId;
