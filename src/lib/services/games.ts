@@ -9,19 +9,23 @@ export async function createGame(gameName: string, playerName: string): Promise<
   return newGame.save();
 }
 
-export async function getGame(id: string): Promise<Game> {
-  const game = await GameModel.findById(id);
+export async function getGame(gameId: string): Promise<Game> {
+  const game = await GameModel.findById(gameId);
   if (!game) {
-    throw new NotFoundError(`game with id "${id}" not found`);
+    throw new NotFoundError(`game with id "${gameId}" not found`);
   }
 
   return game;
 }
 
-export async function startGame(id: string): Promise<Game> {
-  const game = await getGame(id);
+export async function startGame(gameId: string, playerId: string): Promise<Game> {
+  const game = await getGame(gameId);
   if (game.status !== GameStatus.New) {
     throw new BadRequestError(`game cannot be started when it has status "${game.status}"`);
+  }
+
+  if (!game.players.find(({ id }) => playerId === id)) {
+    throw new AuthorizationError(`player ${playerId} is not a part of game ${gameId}`);
   }
 
   game.currentRoller = getRandomInt(0, game.players.length - 1);
